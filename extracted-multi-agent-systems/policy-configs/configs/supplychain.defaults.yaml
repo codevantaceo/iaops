@@ -1,0 +1,16 @@
+registry: ghcr.io/indestructibleautoops
+image: iaops:latest
+signing:
+  key_ref: cosign.key
+  identity_provider: sigstore
+  annotations:
+    owner: platform
+policy:
+  rego: policy/rego/supplychain.rego
+verification:
+  sbom_path: sbom.json
+  fail_on_severity: high
+logging:
+  audit_path: .indestructibleautoops/audit.log
+monitoring:
+  falco_events: /var/run/falco/events.jsonl

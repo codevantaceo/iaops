@@ -1,0 +1,15 @@
+apiVersion: indestructibleautoops/v1
+kind: Adapters
+metadata:
+  name: autodetect
+spec:
+  detectors:
+    - id: python
+      matchAnyFiles: ["pyproject.toml", "requirements.txt", "setup.py"]
+    - id: node
+      matchAnyFiles: ["package.json", "pnpm-lock.yaml", "yarn.lock", "package-lock.json"]
+    - id: go
+      matchAnyFiles: ["go.mod"]
+    - id: generic
+      matchAnyFiles: ["README.md"]
+  adapterOrder: ["python", "node", "go", "generic"]
