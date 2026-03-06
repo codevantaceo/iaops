@@ -1,0 +1,37 @@
+apiVersion: indestructibleautoops/v1
+kind: Policies
+metadata:
+  name: baseline
+spec:
+  filesystem:
+    stateDirMustBeLocal: true
+    forbidSecretsPatterns:
+      - "(?i)aws_access_key_id"
+      - "(?i)aws_secret_access_key"
+      - "(?i)-----BEGIN (RSA|EC|OPENSSH) PRIVATE KEY-----"
+      - "(?i)password\\s*="
+  naming:
+    forbidDoubleExtensions: true
+    allowedExtensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".json"
+      - ".yaml"
+      - ".yml"
+      - ".md"
+      - ".toml"
+      - ".go"
+      - ".sh"
+  supplyChain:
+    requireEvidenceSealing: true
+    hashAlgorithms: ["sha3_512", "blake3"]
+  ci:
+    requireWorkflow: true
+    allowedRunners: ["ubuntu-latest"]
+  gates:
+    blockOn:
+      - "schema_invalid"
+      - "secret_detected"
+      - "narrative_detected"
+      - "dag_cycle"

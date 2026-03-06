@@ -1,0 +1,86 @@
+apiVersion: indestructibleautoops/v1
+kind: Pipeline
+metadata:
+  name: skeleton-to-closedloop
+spec:
+  projectRoot: "."
+  stateDir: ".indestructibleautoops"
+  evidenceDir: ".indestructibleautoops/evidence"
+  eventStream: ".indestructibleautoops/governance/event-stream.jsonl"
+  modes:
+    default: "repair"
+    supported: ["plan", "repair", "verify", "seal"]
+  dag:
+    nodes:
+      - id: interface_metadata_parse
+        kind: step
+        run: "engine.step.interface_metadata_parse"
+        deps: []
+      - id: parameter_validation
+        kind: step
+        run: "engine.step.parameter_validation"
+        deps: ["interface_metadata_parse"]
+      - id: permission_resolution
+        kind: step
+        run: "engine.step.permission_resolution"
+        deps: ["parameter_validation"]
+      - id: security_assessment
+        kind: step
+        run: "engine.step.security_assessment"
+        deps: ["permission_resolution"]
+      - id: approval_chain_validation
+        kind: step
+        run: "engine.step.approval_chain_validation"
+        deps: ["security_assessment"]
+      - id: tool_execution
+        kind: step
+        run: "engine.step.tool_execution"
+        deps: ["approval_chain_validation"]
+      - id: history_immutable
+        kind: step
+        run: "engine.step.history_immutable"
+        deps: ["tool_execution"]
+      - id: continuous_monitoring
+        kind: step
+        run: "engine.step.continuous_monitoring"
+        deps: ["history_immutable"]
+  inputs:
+    adaptersConfig: "configs/indestructibleautoops.adapters.yaml"
+    rolesRegistry: "configs/indestructibleautoops.roles.yaml"
+    policiesConfig: "configs/indestructibleautoops.policies.yaml"
+    schemas:
+      pipeline: "schemas/pipeline.schema.json"
+      roles: "schemas/roles.schema.json"
+      policies: "schemas/policies.schema.json"
+      event: "schemas/event.schema.json"
+  outputs:
+    planFile: ".indestructibleautoops/plan.json"
+    patchReport: ".indestructibleautoops/patch-report.json"
+    verifyReport: ".indestructibleautoops/verify-report.json"
+    sealManifest: ".indestructibleautoops/seal/manifest.json"
+  governance:
+    hash:
+      algorithms: ["sha3_512", "blake3"]
+    banNarrative:
+      enabled: true
+      patterns:
+        - "(?i)once upon a time"
+        - "(?i)story"
+        - "(?i)fiction"
+    forbidQuestions:
+      enabled: true
+      patterns:
+        - "\\?$"
+        - "請問"
+        - "能否"
+  repair:
+    allowWrites: true
+    targets:
+      - "format"
+      - "deps"
+      - "structure"
+      - "ci"
+      - "policies"
+    adapters:
+      autoDetect: true
+      allow: ["generic", "python", "node", "go"]

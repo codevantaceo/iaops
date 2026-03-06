@@ -1,0 +1,49 @@
+# Multi-Agent Systems & Automation Framework - Dependencies
+# 多代理系統與自動化框架 - 依賴項
+
+# Core dependencies / 核心依賴
+click>=8.0.0                    # CLI interface / CLI介面
+pyyaml>=6.0                     # YAML configuration / YAML配置
+jsonschema>=4.0.0               # JSON schema validation / JSON模式驗證
+blake3>=0.3.0                   # Fast hashing / 快速哈希
+
+# Optional but recommended / 可選但推薦
+# Uncomment if needed / 如需要請取消註釋
+
+# For Snyk security scanning / 用於Snyk安全掃描
+# snyk>=1.0.0
+
+# For policy evaluation with OPA / 用於使用OPA進行策略評估
+# Note: OPA Rego evaluation requires OPA binary installation
+# 注意：OPA Rego評估需要安裝OPA二進制文件
+# Install via: https://www.openpolicyagent.org/docs/latest/#running-opa
+
+# Python version requirement / Python版本要求
+# Python >= 3.8
+
+# Standard library modules (no installation needed) / 標準庫模塊（無需安裝）
+# - asyncio
+# - collections
+# - dataclasses
+# - datetime
+# - enum
+# - hashlib
+# - json
+# - logging
+# - math
+# - os
+# - pathlib
+# - queue
+# - re
+# - subprocess
+# - threading
+# - time
+# - typing
+# - uuid
+
+# Development dependencies (optional) / 開發依賴項（可選）
+# pytest>=7.0.0                 # Testing / 測試
+# pytest-asyncio>=0.20.0        # Async testing / 異步測試
+# black>=22.0.0                 # Code formatting / 代碼格式化
+# ruff>=0.0.250                 # Linting / 代碼檢查
+# mypy>=1.0.0                   # Type checking / 類型檢查

@@ -1,0 +1,51 @@
+apiVersion: indestructibleautoops/v1
+kind: RoleRegistry
+metadata:
+  name: indestructibleautoops-engineering-team
+spec:
+  roles:
+    - id: reasoning_agent
+      tags: ["reasoning", "planning", "dag"]
+      inputContract:
+        accepts: ["project_snapshot", "policy_set", "adapter_detect"]
+      outputContract:
+        emits: ["repair_plan", "risk_findings"]
+      dependsOn: ["policy_agent"]
+    - id: data_plane_agent
+      tags: ["filesystem", "artifacts", "snapshots"]
+      inputContract:
+        accepts: ["project_root", "state_dir"]
+      outputContract:
+        emits: ["project_snapshot", "file_index"]
+      dependsOn: []
+    - id: control_plane_agent
+      tags: ["execution", "steps", "rollback"]
+      inputContract:
+        accepts: ["repair_plan", "policy_set"]
+      outputContract:
+        emits: ["patch_report", "rollback_points"]
+      dependsOn: ["reasoning_agent", "policy_agent"]
+    - id: observability_agent
+      tags: ["events", "metrics", "reports"]
+      inputContract:
+        accepts: ["event_stream", "reports"]
+      outputContract:
+        emits: ["metrics", "alerts"]
+      dependsOn: []
+    - id: delivery_agent
+      tags: ["cicd", "gitops", "supply-chain"]
+      inputContract:
+        accepts: ["project_snapshot", "repair_plan"]
+      outputContract:
+        emits: ["ci_patch_set", "attestation_inputs"]
+      dependsOn: ["policy_agent"]
+    - id: policy_agent
+      tags: ["policy", "governance", "compliance"]
+      inputContract:
+        accepts: ["policies_config", "schemas"]
+      outputContract:
+        emits: ["policy_set", "gates"]
+      dependsOn: []
+  constraints:
+    uniqueRoleIds: true
+    requireDAG: true

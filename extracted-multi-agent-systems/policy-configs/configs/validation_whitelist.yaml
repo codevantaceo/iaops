@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────
+# Validation Whitelist Configuration
+# ─────────────────────────────────────────────────────────────────────
+#
+# Each rule suppresses matching validation issues.
+# BLOCKER-severity issues are NEVER suppressed regardless of rules.
+#
+# Fields:
+#   rule_id       — unique identifier
+#   pattern       — regex matched against issue_id
+#   reason        — human-readable justification
+#   approved_by   — person who approved the exemption
+#   expires_at    — optional Unix timestamp (null = no expiry)
+#   category      — optional category filter
+#   file_pattern  — optional regex matched against file_path
+#   max_severity  — highest severity this rule may suppress
+#                   (info | warning | error | critical; never blocker)
+#   status        — active | pending_review | revoked
+# ─────────────────────────────────────────────────────────────────────
+
+rules:
+  # Example: suppress a known flaky performance test
+  - rule_id: "perf_flaky_api_latency"
+    pattern: "perf_regression_api_latency"
+    reason: "API latency fluctuates ±15% in CI due to shared runners"
+    approved_by: "tech-lead"
+    expires_at: null
+    category: "performance"
+    max_severity: "error"
+    status: "active"
+
+  # Example: suppress file-count check during planned refactor
+  - rule_id: "refactor_file_count_2025q1"
+    pattern: "metric_regression_file_count.*file_count"
+    reason: "Planned module consolidation in Q1 2025 reduces file count"
+    approved_by: "architect"
+    expires_at: 1743465600  # 2025-04-01T00:00:00Z
+    category: "regression"
+    max_severity: "error"
+    status: "active"
+
+  # Example: pending human review
+  - rule_id: "pending_new_metric_threshold"
+    pattern: "threshold_.*_min"
+    reason: "New metric thresholds need calibration after infra migration"
+    approved_by: ""
+    category: "threshold"
+    max_severity: "warning"
+    status: "pending_review"
